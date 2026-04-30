@@ -1,5 +1,5 @@
-import { useAppContext } from '../store/AppContext';
-import { fetchArticle, saveArticle, unsaveArticle } from '../api/client';
+import { useAppContext } from '../context/AppContext';
+import { fetchArticle, saveArticle, unsaveArticle } from '../services/client';
 
 function TypeBadge({ type }) {
   const labels = { concept: 'Concept', source: 'Source', synthesis: 'Synthesis' };

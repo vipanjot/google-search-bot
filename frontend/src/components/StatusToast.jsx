@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAppContext } from '../store/AppContext';
+import { useAppContext } from '../context/AppContext';
 
 export default function StatusToast() {
   const { state } = useAppContext();

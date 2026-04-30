@@ -1,0 +1,236 @@
+# CLAUDE.md — Project Intelligence File
+
+> This file is the source of truth for Claude Code sessions.
+> It is **append-only** — never delete entries, only add new ones.
+> Claude must read this file at the start of every session before taking any action.
+
+-----
+
+## 🗂 Project Overview
+
+|Field       |Value                                    |
+|------------|-----------------------------------------|
+|Project Name|<!-- e.g. MyApp -->                      |
+|Description |<!-- One sentence: what this app does -->|
+|Stage       |In Progress                              |
+|Owner       |Vipanjot                                 |
+|Last Updated|<!-- YYYY-MM-DD update each session -->  |
+
+-----
+
+## 🧱 Tech Stack
+
+### Frontend
+
+- **Framework:** React + Vite
+- **Styling:** Tailwind CSS
+- **State Management:** useState / useContext only
+- **Routing:** <!-- e.g. React Router v6 — fill in if used -->
+- **Key Libraries:** <!-- e.g. axios, react-hook-form — add as you go -->
+
+### Backend
+
+- **Runtime:** Node.js
+- **Framework:** Express
+- **Database:** MongoDB
+- **ODM:** <!-- e.g. Mongoose — fill in if used -->
+- **Auth:** Firebase Auth
+
+### Infrastructure
+
+- **Hosting:** Cloudflare
+- **Storage:** <!-- e.g. Cloudflare R2 / S3 — fill in if used -->
+- **CI/CD:** <!-- e.g. GitHub Actions / None -->
+
+-----
+
+## 📁 Project Structure
+
+```
+/
+├── frontend/                   # React + Vite app
+│   ├── src/
+│   │   ├── components/         # Reusable UI components
+│   │   ├── pages/              # Route-level components
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── services/           # API call functions (axios etc.)
+│   │   ├── context/            # React Context providers
+│   │   └── utils/              # Helpers and constants
+│   ├── .env.local              # ⛔ NEVER commit — Vite env vars (VITE_ prefix)
+│   └── vite.config.js
+│
+├── backend/                    # Node.js + Express API
+│   ├── routes/                 # Endpoint definitions
+│   ├── controllers/            # Business logic
+│   ├── models/                 # MongoDB / Mongoose schemas
+│   ├── middleware/             # Auth checks, error handling, logging
+│   ├── services/               # Firebase, external integrations
+│   ├── config/                 # DB connection, Firebase admin setup
+│   └── .env                   # ⛔ NEVER commit — backend secrets
+│
+├── .gitignore                  # Must include all .env files
+├── .env.example                # ✅ Safe to commit — placeholder values only
+├── CLAUDE.md                   # This file
+└── README.md                   # Public-facing project info
+```
+
+> Update this section whenever the structure changes significantly.
+
+-----
+
+## 🔐 Security Rules
+
+Claude must follow these rules in **every session** without exception.
+
+### Never Expose
+
+- API keys, tokens, secrets, or passwords — not in code, comments, or logs
+- MongoDB connection strings or credentials
+- Firebase service account keys or config secrets
+- JWT secrets or session secrets
+- User PII (emails, names, IDs) hardcoded anywhere
+- Internal server paths or stack traces in client-facing error responses
+
+### Environment Variables
+
+- All secrets live in `.env` files — **never hardcoded**
+- Frontend (Vite): only use `VITE_` prefix for non-sensitive config (e.g. public Firebase config)
+- Backend: sensitive keys (MongoDB URI, Firebase Admin SDK, etc.) live only in backend `.env`
+- Always maintain `.env.example` with placeholder values — this **can** be committed
+
+```bash
+# .env.example (safe to commit — placeholders only)
+MONGODB_URI=your_mongodb_connection_string_here
+FIREBASE_PROJECT_ID=your_firebase_project_id_here
+FIREBASE_PRIVATE_KEY=your_firebase_private_key_here
+PORT=5000
+```
+
+### Firebase Auth Rules
+
+- Verify Firebase ID tokens **on the backend** using Firebase Admin SDK — never trust the client
+- Attach decoded user info to `req.user` via middleware
+- Never expose Firebase Admin credentials to the frontend
+
+### Code Practices
+
+- Validate and sanitize all user inputs on the backend
+- Never trust data from the frontend — always re-validate server-side
+- Use Mongoose schema validation as a first line of defense
+- Return generic error messages to clients — never expose stack traces in production
+- CORS: whitelist specific origins only — never use `*` in production
+- Keep auth checks in middleware, not scattered across route handlers
+
+-----
+
+## ✅ Coding Standards
+
+### General
+
+- **Always write comments** — explain the *why*, not just the *what*
+- Write clean, readable code over clever one-liners
+- Functions should do one thing only
+- Name variables and functions descriptively — no `x`, `temp`, `data2`
+
+```js
+// ✅ Good — explains intent
+// Verify the Firebase token before allowing access to protected routes
+const verifyToken = async (req, res, next) => { ... }
+
+// ❌ Bad — no context
+const vt = async (r, s, n) => { ... }
+```
+
+### React (Frontend)
+
+- Functional components only — no class components
+- Extract reusable logic into custom hooks (`useAuth`, `useFetch`, etc.)
+- Keep components under ~150 lines — split if larger
+- API calls go in `services/` — never directly inside components
+- Context is for global state (auth, theme) — don’t overuse it for local state
+
+### Express (Backend)
+
+- One responsibility per route handler — delegate logic to controllers
+- All async route handlers wrapped in try/catch or a global error handler
+- Log errors server-side with full context; return a safe generic message to client
+- Use middleware for: Firebase token verification, rate limiting, input validation
+
+```js
+// ✅ Correct pattern — auth in middleware, logic in controller
+router.get('/profile', verifyToken, userController.getProfile)
+```
+
+### MongoDB / Mongoose
+
+- Define strict schemas — avoid untyped or schema-less collections
+- Use `.lean()` for read-only queries (better performance)
+- Never expose raw `_id` or internal fields unless intentional
+
+-----
+
+## 🤖 Instructions for Claude
+
+1. **Read this file first** before writing any code or making suggestions
+1. **Always explain what you’re doing** — describe the approach before and during implementation
+1. **Always write comments in code** — this is a hard rule, no exceptions
+1. **Append** to the Work Log at the end of each session — never overwrite past entries
+1. **Ask before assuming** anything not listed in this file (new packages, new patterns, etc.)
+1. **Flag** any request that would violate the Security Rules above
+1. **Update** the “Last Updated” field in Project Overview each session
+1. When showing `.env` examples, always use **placeholder values** — never real keys
+1. Do **not** refactor or restructure code outside the scope of what was asked
+
+-----
+
+## 🚧 Work Log
+
+> Append new entries at the bottom. Never edit or delete past entries.
+> Format: `### [YYYY-MM-DD] — Session Title`
+
+-----
+
+### [YYYY-MM-DD] — Initial Setup
+
+**Goal:** Set up CLAUDE.md and establish project conventions
+
+**Completed:**
+
+- [x] Created CLAUDE.md with stack, security rules, and coding standards
+
+**Decisions Made:**
+
+- React + Vite for frontend
+- Node.js + Express for backend
+- MongoDB as database
+- Firebase Auth for authentication
+- Cloudflare for hosting
+- useState/useContext for state (no external state library)
+
+**Next Steps:**
+
+- Fill in project name and description above
+- Add any libraries already installed to the stack section
+- Begin or continue feature work
+
+-----
+
+<!-- Add new session logs below this line -->
+
+-----
+
+## 🐛 Known Issues & Tech Debt
+
+|#|Description                        |Priority|Status|
+|-|-----------------------------------|--------|------|
+|1|<!-- Add issues as they come up -->|—       |Open  |
+
+-----
+
+## 🔗 Key References
+
+- **API Docs:** <!-- Link to any external API you're integrating -->
+- **Firebase Console:** https://console.firebase.google.com
+- **MongoDB Atlas:** https://cloud.mongodb.com
+- **Cloudflare Dashboard:** https://dash.cloudflare.com
+- **Design / Mockups:** <!-- Figma or local path -->

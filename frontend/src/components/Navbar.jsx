@@ -1,7 +1,7 @@
-import { useAppContext } from '../store/AppContext';
-import { exportZipUrl } from '../api/client';
+import { useAppContext } from '../context/AppContext';
+import { exportZipUrl } from '../services/client';
 
-export default function Navbar({ onRefresh }) {
+export default function Navbar({ onRefresh, onOpenSettings }) {
   const { state, dispatch } = useAppContext();
   const savedCount = state.savedFilenames.size;
 
@@ -44,6 +44,14 @@ export default function Navbar({ onRefresh }) {
             aria-label="Refresh"
           >
             ↻
+          </button>
+          <button
+            className="nav-refresh-btn"
+            onClick={onOpenSettings}
+            title="Settings"
+            aria-label="Settings"
+          >
+            ⚙
           </button>
         </div>
       </div>

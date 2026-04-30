@@ -1,4 +1,4 @@
-import { useAppContext } from '../store/AppContext';
+import { useAppContext } from '../context/AppContext';
 
 const TYPES = [
   { value: '', label: 'All Types' },

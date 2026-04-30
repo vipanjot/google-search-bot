@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from 'react';
-import { useAppContext } from './store/AppContext';
+import { useEffect, useCallback, useState } from 'react';
+import { useAppContext } from './context/AppContext';
 import Navbar from './components/Navbar';
 import HeroSearch from './components/HeroSearch';
 import ViewToggle from './components/ViewToggle';
@@ -7,10 +7,12 @@ import FilterBar from './components/FilterBar';
 import ArticleGrid from './components/ArticleGrid';
 import ArticleModal from './components/ArticleModal';
 import StatusToast from './components/StatusToast';
-import { fetchArticles, fetchSaved, fetchSearchStatus } from './api/client';
+import SettingsPanel from './components/SettingsPanel';
+import { fetchArticles, fetchSaved, fetchSearchStatus } from './services/client';
 
 export default function App() {
   const { state, dispatch } = useAppContext();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const loadArticles = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
@@ -66,7 +68,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Navbar onRefresh={loadArticles} />
+      <Navbar onRefresh={loadArticles} onOpenSettings={() => setSettingsOpen(true)} />
       <main className="main-content">
         <HeroSearch />
         <div className="content-section">
@@ -77,6 +79,7 @@ export default function App() {
       </main>
       <ArticleModal />
       <StatusToast />
+      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useAppContext } from '../store/AppContext';
-import { saveArticle, unsaveArticle } from '../api/client';
+import { useAppContext } from '../context/AppContext';
+import { saveArticle, unsaveArticle } from '../services/client';
 
 function stripWikilinks(text) {
   return text.replace(/\[\[([^\]]+)\]\]/g, '$1');

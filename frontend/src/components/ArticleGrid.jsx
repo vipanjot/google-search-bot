@@ -1,4 +1,4 @@
-import { useAppContext } from '../store/AppContext';
+import { useAppContext } from '../context/AppContext';
 import ArticleCard from './ArticleCard';
 
 function SkeletonCard() {

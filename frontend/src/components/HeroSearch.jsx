@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useAppContext } from '../store/AppContext';
-import { triggerSearch } from '../api/client';
+import { useAppContext } from '../context/AppContext';
+import { triggerSearch } from '../services/client';
 
 export default function HeroSearch() {
   const { state, dispatch } = useAppContext();
