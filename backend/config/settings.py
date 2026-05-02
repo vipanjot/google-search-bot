@@ -19,3 +19,7 @@ BOT_TIMEOUT = int(os.getenv("BOT_TIMEOUT", "300"))
 
 # Set AUTO_GIT_PUSH=true in .env to automatically push scraped commits
 AUTO_GIT_PUSH = os.getenv("AUTO_GIT_PUSH", "false").lower() == "true"
+
+# Secret token — all /api/* requests must include X-API-Key: <this value>
+# Generate with: python -c "import secrets; print(secrets.token_hex(32))"
+API_SECRET = os.getenv("API_SECRET", "")

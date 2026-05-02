@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { getApiUrl, setApiUrl } from '../services/client';
+import { getApiUrl, setApiUrl, getApiSecret, setApiSecret } from '../services/client';
 
 export default function SettingsPanel({ open, onClose }) {
   const [url, setUrl] = useState('');
+  const [secret, setSecret] = useState('');
   const [status, setStatus] = useState(null); // null | 'ok' | 'error'
   const [testing, setTesting] = useState(false);
 
   useEffect(() => {
     if (open) {
       setUrl(getApiUrl());
+      setSecret(getApiSecret());
       setStatus(null);
     }
   }, [open]);
@@ -27,6 +29,7 @@ export default function SettingsPanel({ open, onClose }) {
     setStatus(null);
     try {
       const r = await fetch(`${base}/api/articles?search=&type=`, {
+        headers: { 'X-API-Key': secret.trim() },
         signal: AbortSignal.timeout(5000),
       });
       setStatus(r.ok ? 'ok' : 'error');
@@ -39,6 +42,7 @@ export default function SettingsPanel({ open, onClose }) {
 
   const handleSave = () => {
     setApiUrl(url);
+    setApiSecret(secret);
     onClose();
   };
 
@@ -83,17 +87,31 @@ export default function SettingsPanel({ open, onClose }) {
             </button>
           </div>
 
+          <p className="settings-label" style={{ marginTop: '1rem' }}>API Secret Key</p>
+          <p className="settings-hint">
+            The <code>API_SECRET</code> value from your backend <code>.env</code> file.
+            Sent as <code>X-API-Key</code> with every request.
+          </p>
+          <input
+            className="settings-input"
+            type="password"
+            placeholder="your-secret-token"
+            value={secret}
+            onChange={e => { setSecret(e.target.value); setStatus(null); }}
+            spellCheck={false}
+          />
+
           {status === 'ok' && (
             <p className="settings-status ok">Connected successfully</p>
           )}
           {status === 'error' && (
             <p className="settings-status error">
-              Could not connect — is the backend running and tunnel active?
+              Could not connect — check the URL, tunnel, and API secret key.
             </p>
           )}
 
           <div className="settings-actions">
-            <button className="settings-clear-btn" onClick={() => { setUrl(''); setStatus(null); }}>
+            <button className="settings-clear-btn" onClick={() => { setUrl(''); setSecret(''); setStatus(null); }}>
               Clear
             </button>
             <button className="settings-save-btn" onClick={handleSave}>
