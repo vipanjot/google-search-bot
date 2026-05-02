@@ -14,10 +14,10 @@ export const initialState = {
 export function reducer(state, action) {
   switch (action.type) {
     case 'SET_ARTICLES':
-      return { ...state, articles: action.payload };
+      return { ...state, articles: Array.isArray(action.payload) ? action.payload : [] };
 
     case 'SET_SAVED':
-      return { ...state, savedFilenames: new Set(action.payload) };
+      return { ...state, savedFilenames: new Set(Array.isArray(action.payload) ? action.payload : []) };
 
     case 'TOGGLE_SAVED': {
       const next = new Set(state.savedFilenames);

@@ -25,16 +25,18 @@ const authHeaders = (extra = {}) => ({
   'X-API-Key': getApiSecret(),
 });
 
+const checkOk = (r) => { if (!r.ok) throw new Error(String(r.status)); return r; };
+
 const get = (path) =>
-  fetch(`${getApiUrl()}${path}`, { headers: authHeaders() }).then(r => r.json());
+  fetch(`${getApiUrl()}${path}`, { headers: authHeaders() }).then(checkOk).then(r => r.json());
 const del_ = (path) =>
-  fetch(`${getApiUrl()}${path}`, { method: 'DELETE', headers: authHeaders() }).then(r => r.json());
+  fetch(`${getApiUrl()}${path}`, { method: 'DELETE', headers: authHeaders() }).then(checkOk).then(r => r.json());
 const post = (path, body) =>
   fetch(`${getApiUrl()}${path}`, {
     method: 'POST',
     headers: authHeaders(body ? { 'Content-Type': 'application/json' } : {}),
     body: body ? JSON.stringify(body) : undefined,
-  }).then(r => r.json());
+  }).then(checkOk).then(r => r.json());
 
 export const fetchArticles = (search = '', type = '') =>
   get(`/api/articles?search=${encodeURIComponent(search)}&type=${encodeURIComponent(type)}`);

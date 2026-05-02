@@ -6,6 +6,10 @@ so the rest of the app never hard-codes a directory name.
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Articles are stored relative to the project root (where uvicorn is run from)
 SCRAPED_DIR = Path(os.getenv("SCRAPED_DIR", "scraped-articles"))
 SAVED_FILE = Path(os.getenv("SAVED_FILE", "saved_articles.json"))
